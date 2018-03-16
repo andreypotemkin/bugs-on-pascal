@@ -19,9 +19,10 @@ However, it fails in case of Pascal-supported compilation:
 The latter can be explained by the presence of shuffle operation inside warp-divergent condition. Assumptions that work on Kepler and Maxwell architectures
 don't hold on Pascal architecture. It is interested to note that Nvidia garanties normal (expected) behaviour of the same code on Volta-machines.
 
-## Check of atomic operation:
+# Check of atomic operation:
 
 This test fails on Pascal-machine in case of Maxwell-supported compilation:
+
     make ARCH=50
     ./check_atomic
     computed 0.0, while true is 32.0
