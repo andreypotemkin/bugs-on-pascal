@@ -2,7 +2,7 @@
 
 const int WARP_SIZE = 32;
 
-__global__ void check(float* a, float* total)
+__global__ void check_shuffle(float* a, float* total)
 {
   __shared__ float values[WARP_SIZE];
 
@@ -11,7 +11,7 @@ __global__ void check(float* a, float* total)
 
   float val = a[threadIdx.x];
 
-  if (threadIdx.x == 1)
+  if (threadIdx.x == 0)
     for (int i = 0; i < WARP_SIZE; i++)
     {
       float v1 =  __shfl(val, i);
@@ -32,13 +32,12 @@ int main()
   cudaMallocManaged(&total, sizeof(float));
   *total = 0.0;
 
-  check<<<1, 32>>>(data, total);
+  check_shuffle<<<1, 32>>>(data, total);
   cudaDeviceSynchronize();
 
-  printf("check: %.1lf\n", *total);
+  printf("computed %.1lf, while true is %.1f\n", *total, 0.0);
 
   cudaFree(total);
   cudaFree(data);
   return 0;
 }
-	

@@ -1,10 +1,12 @@
 ifeq ($(ARCH),)
-ARCH := 50
+ARCH := 60
 endif
-abc=all
 
-all:
-	nvcc -gencode arch=compute_$(ARCH),code=sm_$(ARCH) check.cu -o check
+targets = check_shuffle check_atomic
+all: $(targets)
 
-test:
-	@if [ `echo xxx` == $(abc) ]; then echo hi; fi;
+clean:
+	rm -f $(targets)
+
+$(targets): %: %.cu
+	nvcc -gencode arch=compute_$(ARCH),code=sm_$(ARCH) $< -o $@
